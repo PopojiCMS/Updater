@@ -89,10 +89,18 @@ if (!empty($_POST)) {
 		case 'file':
 			$data = $_POST['data'];
 			$url = "https://raw.githubusercontent.com/PopojiCMS/PopojiCMS/master/".$data;
-			$file_path = $data;
+			if (strpos($data, 'po-admin') !== false) {
+				$file_path = str_replace('po-admin', DIR_ADM, $data);
+			} elseif (strpos($data, 'po-content') !== false) {
+				$file_path = str_replace('po-content', DIR_CON, $data);
+			} elseif (strpos($data, 'po-includes') !== false) {
+				$file_path = str_replace('po-includes', DIR_INC, $data);
+			} else {
+				$file_path = $data;
+			}
 			$fileInfo = getFileInfo($url);
 			if ($fileInfo['http_code'] == 200) {
-				if ($aku = fileDownload($url, $file_path)) {
+				if (fileDownload($url, $file_path)) {
 					echo '1';
 				} else {
 					echo 'File is already exist';
